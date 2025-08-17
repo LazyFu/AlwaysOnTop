@@ -2,6 +2,7 @@
 #include <shellapi.h>
 #include <vector>
 #include <string>
+#include <algorithm>
 
 #define WND_CLASS_NAME L"AlwaysOnTop"
 
@@ -20,6 +21,7 @@ struct WindowInfo
 };
 NOTIFYICONDATAW g_trayData;
 std::vector<WindowInfo> g_windowList;
+std::vector<HWND> g_pinnedWindows;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 void InitTrayIcon(HWND hWnd);
@@ -79,10 +81,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				if (gfWnd)
 				{
 					bool isTopmost = (GetWindowLongPtr(gfWnd, GWL_EXSTYLE) & WS_EX_TOPMOST);
-					SetWindowPos(gfWnd,
-					             isTopmost ? HWND_NOTOPMOST : HWND_TOPMOST,
-					             0, 0, 0, 0,
-					             SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+					if (isTopmost)
+					{
+						SetWindowPos(gfWnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+						auto it = std::find(g_pinnedWindows.begin(), g_pinnedWindows.end(), gfWnd);
+						if (it != g_pinnedWindows.end())
+						{
+							g_pinnedWindows.erase(it);
+						}
+					}
+					else
+					{
+						SetWindowPos(gfWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+						auto it = std::find(g_pinnedWindows.begin(), g_pinnedWindows.end(), gfWnd);
+						if (it == g_pinnedWindows.end())
+						{
+							g_pinnedWindows.push_back(gfWnd);
+						}
+					}
 				}
 			}
 			break;
@@ -109,6 +125,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 
 		case WM_DESTROY:
+			for (HWND hPinnedWnd : g_pinnedWindows)
+			{
+				if (IsWindow(hPinnedWnd))
+				{
+					SetWindowPos(hPinnedWnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+				}
+			}
 			UnregisterHotKey(hWnd, HOTKEY_ID);
 			RemoveTrayIcon(hWnd);
 			PostQuitMessage(0);
