@@ -109,7 +109,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				case WM_RBUTTONUP:
 					ShowContextMenu(hWnd);
 					break;
-				case WM_LBUTTONDBLCLK:
+				case WM_LBUTTONUP:
 					ShowContextMenu(hWnd);
 					break;
 				default:
@@ -175,7 +175,7 @@ void ShowContextMenu(HWND hWnd)
 			std::wstring menuItem = window.title;
 			if(GetWindowLongPtr(window.hWnd, GWL_EXSTYLE) & WS_EX_TOPMOST)
 			{
-				menuItem += L" (Topmost)";
+				menuItem = L"(Pinned) "+ menuItem;
 			}
 			AppendMenuW(hMenu, MF_STRING | MF_GRAYED, 0, menuItem.c_str());
 		}
