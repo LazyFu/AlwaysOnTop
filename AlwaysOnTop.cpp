@@ -7,7 +7,7 @@
 #define WND_CLASS_NAME L"AlwaysOnTop"
 
 #define HOTKEY_ID 1
-#define HOTKEY_MOD (MOD_CONTROL | MOD_SHIFT)  // Ctrl+Shift
+#define HOTKEY_MOD (MOD_ALT | MOD_SHIFT)  // Alt+Shift
 #define HOTKEY_VK 0x54  // T
 
 #define WM_APP_TRAYMSG (WM_APP+1)
@@ -153,7 +153,7 @@ void InitTrayIcon(HWND hWnd)
 
 	g_trayData.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 
-	wcscpy_s(g_trayData.szTip, L"Always On Top - Ctrl+Shift+T");
+	wcscpy_s(g_trayData.szTip, L"Always On Top - Alt+Shift+T");
 	Shell_NotifyIconW(NIM_ADD, &g_trayData);
 }
 

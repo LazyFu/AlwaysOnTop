@@ -24,6 +24,6 @@ Alternatively, you can directly download executable file from the release page.
 
 ## Usage 使用
 
-Use the hotkey `Ctrl+Shift+T` to pin or unpin window, you can see the list of windows you pinned in the system tray, which are marked as "(Pinned)".
+Use the hotkey `Alt+Shift+T` to pin or unpin window, you can see the list of windows you pinned in the system tray, which are marked as "(Pinned)".
 
-使用快捷键`Ctrl+Shift+T`来顶置或取消顶置窗口，你可以在系统托盘查看你顶置的窗口列表，他们被标记为“(Pinned)”。
+使用快捷键`Alt+Shift+T`来顶置或取消顶置窗口，你可以在系统托盘查看你顶置的窗口列表，他们被标记为“(Pinned)”。
